@@ -10,7 +10,7 @@ export const SidebarComponent = () => {
     };
 
     return (
-        <div className="bg-gray-800 text-white w-64 space-y-6 py-7 px-2">
+        <div className="bg-dark text-white w-64 space-y-6 py-7 px-2">
             <nav>
                 <a href="/dashboard/home" className="block py-2.5 px-4 hover:bg-gray-700">
                     Home

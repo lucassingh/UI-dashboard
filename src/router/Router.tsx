@@ -1,32 +1,43 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { ClientsPage, DashboardPage, HomePage, LoginPage, ServicesPage } from '../pages';
-import { useAuth } from '../context/AuthContext';
+import { ProtectedRoute } from './ProtectedRoute';
 
 const Routes = () => {
-    const { isAuthenticated } = useAuth();
-
     const router = createBrowserRouter([
         {
             path: '/',
-            element: <LoginPage />,
+            element: <LoginPage />
         },
         {
             path: '/dashboard',
-            element: isAuthenticated ? <DashboardPage /> : <Navigate to="/" />,
+            element: <ProtectedRoute />,
             children: [
                 {
-                    path: 'home',
-                    element: <HomePage />,
-                },
-                {
-                    path: 'clients',
-                    element: <ClientsPage />,
-                },
-                {
-                    path: 'services',
-                    element: <ServicesPage />,
+                    element: <DashboardPage />,
+                    children: [
+                        {
+                            index: true,
+                            element: <Navigate to="home" replace />,
+                        },
+                        {
+                            path: 'home',
+                            element: <HomePage />,
+                        },
+                        {
+                            path: 'clients',
+                            element: <ClientsPage />,
+                        },
+                        {
+                            path: 'services',
+                            element: <ServicesPage />,
+                        },
+                    ],
                 },
             ],
+        },
+        {
+            path: '*',
+            element: <Navigate to="/" replace />,
         },
     ]);
 
