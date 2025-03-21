@@ -1,8 +1,18 @@
+export { PinCodeComponent } from './dashboard/loans/UI/PinCodeComponent';
+export { ModalComponent } from './UI/ModalComponent';
+export { ProgressBarComponent } from './dashboard/loans/UI/ProgressBarComponent';
+export { FormFinishData } from './dashboard/loans/formsSteps/FormFinishData';
+export { FormCreditData } from './dashboard/loans/formsSteps/FormCreditData';
+export { FormLoanData } from './dashboard/loans/formsSteps/FormLoanData';
 export { SidebarComponent } from './UI/SidebarComponent'
 export { NavbarComponent } from './UI/NavbarComponent'
 export { FooterComponent } from './UI/FooterComponent'
 export { SliderComponent } from './login/SliderComponent'
 export { LogoComponent } from './UI/LogoComponent'
 export { LoaderComponent } from './UI/LoaderComponent';
-
-
+export { JumbotronComponent } from './UI/JumbotronComponent'
+export { LayoutComponent } from './UI/LayoutComponent'
+export { WizardComponent } from './dashboard/loans/WizardComponent'
+export { FormBasicData } from './dashboard/loans/formsSteps/FormBasicData'
+export { FormAditionalData } from './dashboard/loans/formsSteps/FormAditionalData'
+export { DinamicTableComponent } from './UI/DinamicTableComponent';

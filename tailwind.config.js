@@ -12,6 +12,7 @@ export default {
         'tertiary': '#6c757d',
         'gray': '#c5c5c5',
         'light': '#f3f4f9',
+        'bg': '#F5F6FA',
         'dark': '#1f253f'
       },
       boxShadow: {

@@ -1,9 +1,9 @@
 
 export const FooterComponent = () => {
     return (
-        <footer className="bg-white shadow mt-auto">
+        <footer className="bg-dark shadow mt-auto">
             <div className="container mx-auto px-6 py-4">
-                <p className="text-center text-gray-500">© 2025 Dashboard. All rights reserved.</p>
+                <p className="text-center text-gray" style={{ fontSize: '12px' }}>© 2025 Boxivas. All rights reserved.</p>
             </div>
         </footer>
     )
