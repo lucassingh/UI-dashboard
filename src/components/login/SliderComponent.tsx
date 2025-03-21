@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Fragment } from "react";
 import clsx from "clsx";
 import { Integration } from '../../interfaces/integration';
 

@@ -52,7 +52,7 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
             Object.keys(simulatedData).forEach((key) => {
                 setFieldValue(key as keyof typeof simulatedData, simulatedData[key as keyof typeof simulatedData]);
             });
-            setFormData(simulatedData); // Actualiza el estado global
+            setFormData(simulatedData);
             markStepAsCompleted(true);
         } else {
             const emptyData = {
@@ -68,7 +68,7 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
             Object.keys(emptyData).forEach((key) => {
                 setFieldValue(key as keyof typeof emptyData, emptyData[key as keyof typeof emptyData]);
             });
-            setFormData(emptyData); // Actualiza el estado global
+            setFormData(emptyData);
             markStepAsCompleted(false);
         }
         setShowForm(true);
@@ -94,7 +94,7 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
                 markStepAsCompleted(true);
             }}
         >
-            {({ values, setFieldValue, isValid, dirty, validateForm, setFieldTouched }) => (
+            {({ values, setFieldValue, validateForm, setFieldTouched }) => (
                 <Form className="p-4">
                     <div className="mb-6 border border-gray rounded-lg w-[400px] p-5">
                         <div className="flex items-center space-x-2">
