@@ -65,7 +65,7 @@ export const FormLoanData: React.FC<{
                         markStepAsCompleted(true);
                     }}
                 >
-                    {({ isValid, values, setFieldValue }) => (
+                    {({ isValid, dirty, values, setFieldValue }) => (
                         <Form>
                             <div className="flex space-x-4">
                                 <div className="flex-1">
@@ -85,7 +85,12 @@ export const FormLoanData: React.FC<{
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 const formattedValue = formatCurrency(e.target.value);
                                                 setFieldValue("loanAmount", formattedValue);
-                                                if (isValid && values.loanAmount && values.monthlyIncome) {
+                                                const loanAmount = parseCurrency(formattedValue);
+                                                setFormData({
+                                                    ...formData,
+                                                    loanAmount,
+                                                });
+                                                if (isValid && dirty) {
                                                     markStepAsCompleted(true);
                                                 } else {
                                                     markStepAsCompleted(false);
@@ -116,7 +121,12 @@ export const FormLoanData: React.FC<{
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                                 const formattedValue = formatCurrency(e.target.value);
                                                 setFieldValue("monthlyIncome", formattedValue);
-                                                if (isValid && values.loanAmount && values.monthlyIncome) {
+                                                const monthlyIncome = parseCurrency(formattedValue);
+                                                setFormData({
+                                                    ...formData,
+                                                    monthlyIncome,
+                                                });
+                                                if (isValid && dirty) {
                                                     markStepAsCompleted(true);
                                                 } else {
                                                     markStepAsCompleted(false);

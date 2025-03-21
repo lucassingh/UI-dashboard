@@ -12,7 +12,10 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
 
     const validationSchema = Yup.object({
         dni: Yup.string()
-            .matches(/^\d{2}\.\d{3}\.\d{3}$/, "Formato inválido (XX.XXX.XXX)")
+            .matches(
+                /^\d{1,2}\.\d{3}\.\d{3}$/,
+                "Formato inválido (X.XXX.XXX o XX.XXX.XXX)"
+            )
             .required("DNI requerido"),
         nombre: Yup.string().required("Requerido"),
         apellido: Yup.string().required("Requerido"),
@@ -22,23 +25,53 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
         localidad: Yup.string().required("Requerido"),
     });
 
-    const fillForm = (setFieldValue: any) => {
-        const simulatedData = {
-            dni: "27.233.321",
-            nombre: "Héctor",
-            apellido: "Dominguez",
-            email: "hectordominguez@gmail.com.com",
-            telefono: "11 345 66985",
-            provincia: "Buenos Aires",
-            localidad: "La Plata",
-        };
+    const formatDNI = (value: string) => {
+        const numbersOnly = value.replace(/\D/g, "");
+        const truncatedNumbers = numbersOnly.slice(0, 8);
+        if (truncatedNumbers.length <= 2) {
+            return truncatedNumbers;
+        } else if (truncatedNumbers.length <= 5) {
+            return `${truncatedNumbers.slice(0, -3)}.${truncatedNumbers.slice(-3)}`;
+        } else {
+            return `${truncatedNumbers.slice(0, -6)}.${truncatedNumbers.slice(-6, -3)}.${truncatedNumbers.slice(-3)}`;
+        }
+    };
 
-        Object.keys(simulatedData).forEach((key) => {
-            setFieldValue(key as keyof typeof simulatedData, simulatedData[key as keyof typeof simulatedData]);
-        });
-        setFormData(simulatedData);
+    const fillForm = (setFieldValue: any, dni: string) => {
+        if (dni === "27.233.321" || dni === "2.723.321") {
+            const simulatedData = {
+                dni: dni,
+                nombre: "Héctor",
+                apellido: "Dominguez",
+                email: "hectordominguez@gmail.com",
+                telefono: "11 345 66985",
+                provincia: "Buenos Aires",
+                localidad: "La Plata",
+            };
+
+            Object.keys(simulatedData).forEach((key) => {
+                setFieldValue(key as keyof typeof simulatedData, simulatedData[key as keyof typeof simulatedData]);
+            });
+            setFormData(simulatedData); // Actualiza el estado global
+            markStepAsCompleted(true);
+        } else {
+            const emptyData = {
+                dni: dni,
+                nombre: "",
+                apellido: "",
+                email: "",
+                telefono: "",
+                provincia: "",
+                localidad: "",
+            };
+
+            Object.keys(emptyData).forEach((key) => {
+                setFieldValue(key as keyof typeof emptyData, emptyData[key as keyof typeof emptyData]);
+            });
+            setFormData(emptyData); // Actualiza el estado global
+            markStepAsCompleted(false);
+        }
         setShowForm(true);
-        markStepAsCompleted(true);
     };
 
     return (
@@ -53,12 +86,15 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
                 localidad: formData.localidad || "",
             }}
             validationSchema={validationSchema}
+            validateOnMount={false}
+            validateOnBlur={true}
+            validateOnChange={true}
             onSubmit={(values) => {
-                setFormData(values);
+                setFormData(values); // Actualiza el estado global al enviar el formulario
                 markStepAsCompleted(true);
             }}
         >
-            {({ values, setFieldValue }) => (
+            {({ values, setFieldValue, isValid, dirty, validateForm, setFieldTouched }) => (
                 <Form className="p-4">
                     <div className="mb-6 border border-gray rounded-lg w-[400px] p-5">
                         <div className="flex items-center space-x-2">
@@ -66,17 +102,26 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
                             <Field
                                 type="text"
                                 name="dni"
-                                placeholder="Ingrese su DNI (XX.XXX.XXX)"
-                                className="w-[300px] p-2 border border-gray rounded-md"
+                                placeholder="Ingrese su DNI (X.XXX.XXX o XX.XXX.XXX)"
+                                className="w-[300px] p-2 border border-gray rounded-md text-right"
                                 value={values.dni}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setFieldValue("dni", e.target.value);
+                                    const formattedValue = formatDNI(e.target.value);
+                                    setFieldValue("dni", formattedValue);
+                                    validateForm();
+
+                                    // Actualiza el estado global con el nuevo valor del DNI
+                                    setFormData({ ...formData, dni: formattedValue });
+                                }}
+                                onBlur={() => {
+                                    setFieldTouched("dni", true);
+                                    validateForm();
                                 }}
                             />
                             <button
                                 type="button"
                                 onClick={() => {
-                                    fillForm(setFieldValue);
+                                    fillForm(setFieldValue, values.dni);
                                 }}
                                 className="px-4 py-2 rounded-md text-white bg-blue-500 hover:bg-blue-600"
                             >
@@ -102,6 +147,22 @@ export const FormBasicData: React.FC<FormBasicDataProps> = ({
                                         name={field.name}
                                         placeholder={field.placeholder}
                                         className="w-full p-2 border border-gray rounded-md"
+                                        autoComplete="off"
+                                        onBlur={() => {
+                                            setFieldTouched(field.name, true);
+                                            validateForm();
+                                        }}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                            setFieldValue(field.name, e.target.value);
+                                            validateForm().then((errors) => {
+                                                if (Object.keys(errors).length === 0) {
+                                                    markStepAsCompleted(true);
+                                                } else {
+                                                    markStepAsCompleted(false);
+                                                }
+                                            });
+                                            setFormData({ ...formData, [field.name]: e.target.value });
+                                        }}
                                     />
                                     <ErrorMessage name={field.name} component="div" className="text-red-500 text-sm" />
                                 </div>

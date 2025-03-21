@@ -27,18 +27,11 @@ export const FormCreditData = ({ handleNextCreditData, markCurrentStepAsComplete
     };
 
     const handleConfirm = () => {
-        // Marca el paso como completado
         if (markCurrentStepAsCompleted) {
             markCurrentStepAsCompleted(true);
         }
-
-        // Avanza automáticamente al siguiente paso
         setCurrentStep(currentStep + 1);
-
-        // Cierra el modal
         handleCloseModal();
-
-        // Llama a la función para manejar la lógica adicional (si es necesario)
         handleNextCreditData();
     };
 

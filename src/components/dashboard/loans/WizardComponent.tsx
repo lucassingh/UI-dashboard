@@ -25,7 +25,6 @@ export const WizardComponent: React.FC<WizardProps> = ({ steps, onComplete }) =>
     const isCurrentStepCompleted = completedSteps[currentStep];
 
     const handleNext = async () => {
-
         if (submitForm) {
             try {
                 await submitForm();
@@ -33,7 +32,7 @@ export const WizardComponent: React.FC<WizardProps> = ({ steps, onComplete }) =>
                 console.error("Error al ejecutar submitForm:", error);
             }
         } else {
-            return
+            return;
         }
 
         if (isCurrentStepCompleted) {

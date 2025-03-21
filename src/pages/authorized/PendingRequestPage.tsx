@@ -42,6 +42,17 @@ export const PendingRequestPage = () => {
         navigate("/dashboard/home");
     };
 
+    const formatDNI = (value: string) => {
+        const numbersOnly = value.replace(/\D/g, '');
+        if (numbersOnly.length <= 2) {
+            return numbersOnly;
+        } else if (numbersOnly.length <= 5) {
+            return `${numbersOnly.slice(0, 2)}.${numbersOnly.slice(2)}`;
+        } else {
+            return `${numbersOnly.slice(0, 2)}.${numbersOnly.slice(2, 5)}.${numbersOnly.slice(5, 8)}`;
+        }
+    };
+
     return (
         <div>
             <JumbotronComponent imageUrl={imgBg} title="Estado de tus préstamos" />
@@ -53,7 +64,7 @@ export const PendingRequestPage = () => {
                         setShowTable(values.dni === "27.233.321");
                     }}
                 >
-                    {({ handleSubmit }) => (
+                    {({ handleSubmit, setFieldValue }) => (
                         <Form className="mb-6 border border-gray rounded-lg w-[400px] p-5" onSubmit={handleSubmit}>
                             <div className="flex items-center space-x-2">
                                 <span className="text-tertiary">DNI</span>
@@ -62,6 +73,12 @@ export const PendingRequestPage = () => {
                                     name="dni"
                                     placeholder="Ingrese su DNI (XX.XXX.XXX)"
                                     className="w-[300px] p-2 border border-gray rounded-md"
+                                    style={{ textAlign: 'right' }}
+                                    maxLength={11}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const formattedValue = formatDNI(e.target.value);
+                                        setFieldValue("dni", formattedValue);
+                                    }}
                                 />
                                 <button
                                     type="submit"
